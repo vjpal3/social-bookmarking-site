@@ -1,0 +1,87 @@
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <div class="grid-x grid-padding-x">
+    <div class="small-3 large-3 cell"></div>
+    <div class="small-8 large-4 cell">
+      <h4>Update Profile</h4>
+      <p><%= devise_error_messages! %></p>
+    </div>
+    <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :first_name, "First Name", class: "text-right middle" %>
+  </div>
+  <div class="small-8 large-4 cell">
+    <%= f.text_field :first_name, autofocus: true, autocomplete: "first_name" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :last_name, "Last Name", class: "text-right middle"  %>
+  </div>
+  <div class="small-8 large-4 cell">
+    <%= f.text_field :last_name, autofocus: true, autocomplete: "last_name" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :email, class: "text-right middle" %>
+  </div>
+  <div class="small-8 large-4 cell">
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div class="small-12 large-12 cell">Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+  <% end %>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :password, class: "text-right " %>
+
+  </div>
+  <div class="small-8 large-4 cell">
+    <% if @minimum_password_length %>
+    <em><%= @minimum_password_length %> characters minimum; </em>
+    <% end %>
+    <i>Leave blank if you don't want to change it</i>
+    <%= f.password_field :password, autocomplete: "off" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :password_confirmation, class: "text-right middle" %>
+  </div>
+  <div class="small-8 large-4 cell">
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell">
+    <%= f.label :current_password, class: "text-right"  %>
+  </div>
+  <div class="small-8 large-4 cell">
+    <i>we need your current password to confirm your changes</i>
+    <%= f.password_field :current_password, autocomplete: "off" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+  <div class="small-3 large-3 cell"></div>
+  <div class="small-8 large-4 cell actions">
+    <%= f.submit "Update", class: "button secondary expanded" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+
+<% end %>
+
+<!-- <h3>Cancel my account</h3> -->
+  <div class="small-3 large-3 cell"></div>
+  <div class="small-8 large-4 cell actions">
+    <p><br /></p>
+    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "button secondary expanded" %>
+  </div>
+  <div class="small-1 large-5 cell"></div>
+</div>
+  <ul class="menu custom-menu">
+    <li><%= link_to "Back", :back %></li>
+  </ul>
