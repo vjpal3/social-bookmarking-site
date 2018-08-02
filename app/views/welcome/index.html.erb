@@ -1,1 +1,23 @@
-<h1>Hello Rails</h1>
+<h4 class="page-heading">Recently Bookmarked Articles on the Site</h4>
+<hr>
+<% if !@empty_msg.nil? %>
+  <p><%= @empty_msg %></p>
+<% else %>
+  <% @articles.each do |item| %>
+
+    <%= link_to "#{item.article.title}", item.article.url, class: "item" %><br>
+    <span class="item-DT">Saved from:</span>
+    <span class="item-DD"><%= item.article.host %></span>
+    <span class="item-DT"> on: </span><span class="item-DD"><%= item.created_at.time.to_date %></span><br>
+    <span class="item-DT">Tags: </span><span class="item-DD"><%= link_to item.article.tags, articles_path(search: item.article.tags) %></span>
+    &emsp;
+
+    <% if !item.user_rating.nil? %>
+      <span class="item-DT"> Rating:</span>
+      <span class="item-DD"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
+    <% end %>
+    &emsp;
+
+    <hr>
+  <% end %>
+<% end %>

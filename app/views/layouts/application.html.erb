@@ -14,10 +14,10 @@
   <body>
     <div class="top-bar">
       <div class="top-bar-left">
-        <!-- <ul class="menu"> -->
-          <a class="home" href="#"><i class="fi-bookmark"></i> MyBookmarks</a>
-        <!-- </ul> -->
-
+        <%= link_to root_path, class: "home" do %>
+          <i class="fi-bookmark"></i>
+          MyBookmarks
+        <% end %>
       </div>
       <div class="top-bar-right">
         <ul class="menu">
@@ -41,21 +41,19 @@
         <p></p>
         <%- if current_user -%>
           <div class="button-group" id="main-menu">
-            <a class="button custom">Articles</a>
-            <a class="button arrow-only custom">
-              <i class="fi-plus" aria-hidden="true"></i>
-              <span class="show-for-sr">Add Articles</span>
-            </a>
+            <!-- <a class="button custom">Articles</a> -->
+            <%= link_to "My Article Bookmarks", articles_path, class: "button custom" %>
+            <%= link_to '<i class="fi-plus" aria-hidden="true"></i>'.html_safe, new_article_path, title: "Add Article", class: "button arrow-only custom add-article" %>
           </div>
           <div class="button-group">
-            <a class="button custom">Books</a>
+            <a class="button custom">My Book Bookmarks</a>
             <a class="button arrow-only custom">
               <i class="fi-plus" aria-hidden="true"></i>
               <span class="show-for-sr">Add Books</span>
             </a>
           </div>
         <%- else %>
-          <a class="button custom">Articles</a>
+          <%= link_to "Articles", articles_path, class: "button custom" %>
           <a class="button custom">Books</a>
         <%- end -%>
 
@@ -64,7 +62,7 @@
 
     <div class="grid-container">
       <div class="grid-x grid-margin-x" id="content">
-        <div class="medium-9 cell">
+        <div class="medium-9 cell bookmarks-data" >
         <%- flash.each do |key, value| -%>
         <div class="callout small flash-msg alert flash flash-<%= key %>">
           <%= value %>

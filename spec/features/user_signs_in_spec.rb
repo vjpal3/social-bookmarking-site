@@ -12,9 +12,7 @@ feature "User successfully sings in", %Q{
   scenario "successful sign in" do
     user = FactoryBot.create(:user)
     visit new_user_session_path
-
-    # fill_in "First Name", with: user.first_name
-    # fill_in "Last Name", with: user.last_name
+    
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
 

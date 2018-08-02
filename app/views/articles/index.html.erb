@@ -1,0 +1,47 @@
+<% if !@search_msg.nil? %>
+  <h4 class="page-heading">Article Bookmarks <span class="heading-tags"> - Tag: '<%= @search_msg %>'</span></h4>
+  <p class="heading-link">
+    <%= link_to "Browse articles bookmarked by other users", articles_path(show_available: "Show Available") %>
+  </p>
+<% else %>
+  <% if !user_signed_in? || @msg_access == "show public access"%>
+    <h4 class="page-heading">Articles bookmarked by other Users</h4>
+  <% else %>
+    <h4 class="page-heading">My Article Bookmarks</h4>
+    <p class="heading-link">
+      <%= link_to "Browse articles bookmarked by other users", articles_path(show_available: "Show Available") %>
+    </p>
+  <% end %>
+<% end %>
+<hr>
+<% if !@empty_msg.nil? %>
+  <p><%= @empty_msg %></p>
+<% else %>
+  <% @articles.each do |item| %>
+    <% if (@msg_access == "show private access" && item.access == "private") %>
+      <span data-tooltip tabindex="1" title="Private Bookmark"><i class="fi-lock icon-lock-style" aria-hidden="true"></i></span>
+    <% end %>
+    <%= link_to "#{item.article.title}", item.article.url, class: "item" %><br>
+    <span class="item-DT">Saved from:</span>
+    <span class="item-DD"><%= item.article.host %></span>
+    <span class="item-DT"> on: </span><span class="item-DD"><%= item.created_at.time.to_date %></span><br>
+    <span class="item-DT">Tags: </span><span class="item-DD"><%= link_to item.article.tags, articles_path(search: item.article.tags) %></span>
+    &emsp;
+
+    <% if !item.user_rating.nil? %>
+      <span class="item-DT"> Rating:</span>
+      <span class="item-DD"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
+    <% end %>
+    &emsp;
+    <% if current_user && current_user.id == item.user_id %>
+      <span class="item-DT"> Status:</span>
+      <span class="item-DD"><%= item.status %></span><br>
+      <%= link_to "Edit", edit_article_path(item.article), class: "edit-delete-links" %>
+      &emsp;|&emsp;
+      <%= link_to 'Delete', article_path(item.article),
+                  method: :delete,
+                  data: { confirm: 'Are you sure?' }, class: "edit-delete-links" %>
+    <% end %>
+    <hr>
+  <% end %>
+<% end %>

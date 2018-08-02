@@ -1,0 +1,69 @@
+<%= form_for @article do |f| %>
+  <div class="grid-x grid-padding-x">
+    <div class="small-1 large-1 cell"></div>
+    <div class="small-11 large-10 cell">
+      <% if @article.persisted? %>
+        <h4 class="page-heading">Edit Article Bookmark</h4>
+      <% else %>
+        <h4 class="page-heading">Add Article Bookmark</h4>
+      <% end %>
+      <p></p>
+      <%= render "layouts/errors", object: @article %>
+      <%= render "layouts/errors", object: @articles_user %>
+    </div>
+    <div class="large-1 cell"></div>
+
+    <div class="small-1 large-1 cell">
+      <%= f.label :title, class: "text-right middle" %>
+    </div>
+    <div class="small-11 large-10 cell">
+      <%= f.text_field :title %>
+    </div>
+    <div class="large-1 cell"></div>
+
+    <div class="small-1 large-1 cell">
+      <%= f.label :url, "Url", class: "text-right middle" %>
+    </div>
+    <div class="small-11 large-10 cell">
+      <%= f.text_field :url %>
+    </div>
+    <div class="large-1 cell"></div>
+
+
+    <%= fields_for :articles_user do |articles_user_fields| %>
+      <div class="small-1 large-1 cell"> </div>
+      <div class="small-11 large-10 cell">
+        <%= articles_user_fields.check_box :access, {}, "private", "public" %>
+        <%= articles_user_fields.label :access, "Private" %>
+        <%= articles_user_fields.check_box :status, {}, "To-do", "Read" %>
+        <%= articles_user_fields.label :status, "To-do" %>
+      </div>
+      <div class="large-1 cell"></div>
+
+      <div class="small-1 large-1 cell">
+        <%= articles_user_fields.label :user_rating, "Rating:", class: "text-right" %>
+      </div>
+      <div class="small-11 large-10 cell">
+        <% @ratings_collection.each do |ratings_array| %>
+          <%= articles_user_fields.radio_button :user_rating, ratings_array.first %>
+          <%= articles_user_fields.label :user_rating, "#{ratings_array.last}", value: "#{ratings_array.first}" %>
+        <% end %>
+      </div>
+      <div class="large-1 cell"></div>
+    <% end %>
+
+    <div class="small-1 large-1 cell">
+      <%= f.label :tags, class: "text-right middle" %>
+    </div>
+    <div class="small-11 large-10 cell">
+      <%= f.text_field :tags %>
+    </div>
+    <div class="large-1 cell"></div>
+
+    <div class="small-1 large-1 cell"> </div>
+    <div class="small-11 large-10 cell">
+      <%= f.submit @article.persisted? ? "Update Bookmark" : "Save Bookmark", class: "button secondary " %>
+    </div>
+    <div class="large-1 cell"></div>
+  </div>
+<% end %>
