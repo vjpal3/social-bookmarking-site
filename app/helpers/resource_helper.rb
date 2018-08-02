@@ -1,4 +1,4 @@
-module DeviseHelper
+module ResourceHelper
   # def devise_error_messages!
   #   if resource.errors.full_messages.any?
   #       flash.now[:error] = "Please correct following fields: \\n"
@@ -7,14 +7,14 @@ module DeviseHelper
   #   return ''
   # end
 
-  def devise_error_messages!
-    return "" unless devise_error_messages?
+  def resource_error_messages!
+    return "" unless resource_error_messages?
 
    messages = resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join
    # sentence = I18n.t("errors.messages.not_saved",
    #                   :count => resource.errors.count,
    #                   :resource => resource.class.model_name.human.downcase)
-   sentence = "Please correct following fields: "
+   sentence = "Please correct following errors: "
 
    html = <<-HTML
    <div id="error_explanation">
@@ -26,7 +26,7 @@ module DeviseHelper
    html.html_safe
  end
 
- def devise_error_messages?
+ def resource_error_messages?
    !resource.errors.empty?
  end
 
