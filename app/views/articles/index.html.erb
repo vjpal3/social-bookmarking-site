@@ -1,47 +1,67 @@
 <% if !@search_msg.nil? %>
-  <h4 class="page-heading">Article Bookmarks <span class="heading-tags"> - Tag: '<%= @search_msg %>'</span></h4>
+  <h4 class="page-heading">Article Bookmarks</span></h4>
+
   <p class="heading-link">
-    <%= link_to "Browse articles bookmarked by other users", articles_path(show_available: "Show Available") %>
+    <%= link_to "Browse articles bookmarked by others", articles_path(show_available: "Show Available") %>
   </p>
+  <br>
+  <span class="heading-tags"> Search Results for Tag: '<%= @search_msg %>', <%= @articles.count %> found. </span>
 <% else %>
   <% if !user_signed_in? || @msg_access == "show public access"%>
-    <h4 class="page-heading">Articles bookmarked by other Users</h4>
+    <h5 class="page-heading">Articles bookmarked by other Users</h5>
   <% else %>
     <h4 class="page-heading">My Article Bookmarks</h4>
     <p class="heading-link">
-      <%= link_to "Browse articles bookmarked by other users", articles_path(show_available: "Show Available") %>
+      <%= link_to "Browse articles bookmarked by others", articles_path(show_available: "Show Available") %>
     </p>
   <% end %>
 <% end %>
 <hr>
-<% if !@empty_msg.nil? %>
-  <p><%= @empty_msg %></p>
+<% if !@empty_msg_articles.nil? %>
+  <p><%= @empty_msg_articles %></p>
 <% else %>
+  <!-- This logic is to remove the bookmarks that the current_user as well as other users have already saved. -->
+  <% remove_articles = [] %>
+  <% if current_user && !@articles_to_exclude.nil? %>
+    <% @articles_to_exclude.each do |row| %>
+      <% remove_articles << row["article_id"] %>
+    <% end %>
+  <% end %>
+
   <% @articles.each do |item| %>
+    <% next if current_user && remove_articles.include?(item.article_id) %>
+
     <% if (@msg_access == "show private access" && item.access == "private") %>
       <span data-tooltip tabindex="1" title="Private Bookmark"><i class="fi-lock icon-lock-style" aria-hidden="true"></i></span>
     <% end %>
     <%= link_to "#{item.article.title}", item.article.url, class: "item" %><br>
     <span class="item-DT">Saved from:</span>
     <span class="item-DD"><%= item.article.host %></span>
-    <span class="item-DT"> on: </span><span class="item-DD"><%= item.created_at.time.to_date %></span><br>
-    <span class="item-DT">Tags: </span><span class="item-DD"><%= link_to item.article.tags, articles_path(search: item.article.tags) %></span>
+    <span class="item-DT"> on: </span><span class="item-DD-small"><%= item.created_at.time.to_date %></span><br>
+    <span class="item-DT">Tags: </span><%= link_to item.article.tags, articles_path(search: item.article.tags), class: "tags-link" %>
     &emsp;
 
     <% if !item.user_rating.nil? %>
       <span class="item-DT"> Rating:</span>
-      <span class="item-DD"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
+      <span class="item-DD-small"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
     <% end %>
     &emsp;
     <% if current_user && current_user.id == item.user_id %>
       <span class="item-DT"> Status:</span>
-      <span class="item-DD"><%= item.status %></span><br>
-      <%= link_to "Edit", edit_article_path(item.article), class: "edit-delete-links" %>
-      &emsp;|&emsp;
-      <%= link_to 'Delete', article_path(item.article),
+      <span class="item-DD-small"><%= item.status %></span><br>
+      <%= link_to "Edit", edit_article_path(item.article), class: "hollow button secondary small btn-action" %>
+
+      <%= link_to 'Delete', articles_user_path(item),
                   method: :delete,
-                  data: { confirm: 'Are you sure?' }, class: "edit-delete-links" %>
+                  data: { confirm: 'Are you sure?' },  class: "hollow button secondary small btn-action delete_article" %>
     <% end %>
+
+    <% if (current_user && current_user.id != item.user_id) || !user_signed_in? %>
+      <br>
+      <%= button_to 'Save', articles_users_path, method: :post, params: { article_user_data: item }, name: "save", class: "hollow button secondary small btn-action" %>
+      <%= button_to 'Save in To-dos', articles_users_path, method: :post, params: { article_user_data: item }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+    <% end %>
+
     <hr>
   <% end %>
 <% end %>

@@ -1,23 +1,87 @@
-<h4 class="page-heading">Recently Bookmarked Articles on the Site</h4>
-<hr>
-<% if !@empty_msg.nil? %>
-  <p><%= @empty_msg %></p>
-<% else %>
-  <% @articles.each do |item| %>
+<% if current_user && current_user.admin? %>
+  <h4 class="page-heading">Welcome to Admin Section</h4>
+  <p></p>
+  <form action="<%= root_path %>" method="get" id="api-search-form">
 
+    <%= text_field_tag :api_search, params[:api_search], placeholder: "Enter keyword to download books", class: "search-input" %>
+    <%= submit_tag "Search API and Download Books Data", name: nil, class: "button secondary " %>
+  </form>
+  <hr class="form-divider">
+
+  <% if @empty_search_result %>
+    <p class="subheader"><%= @empty_search_result %></p>
+  <% else %>
+    <!-- This condition required for the same page is rendering form as well as results of form submission. -->
+    <% if !@books_from_api.blank? %>
+      <p class="subheader"><em>Following Search Results were successfully saved to the database: <%= @books_from_api.count %> found. </em></p>
+      <p></p>
+
+      <% @books_from_api.each do |book| %>
+            <%= render partial: "layouts/book", object: book %>
+          </div>
+        </div>
+        <hr>
+      <% end %>
+
+    <% end %>
+  <% end %>
+<% end %>
+<p></p>
+
+<h5 class="subheader">Recently Bookmarked Articles on the Site</h5>
+<hr>
+<% if !@empty_msg_articles.nil? %>
+  <p class="subheader"><%= @empty_msg_articles %></p>
+<% elsif !@articles.blank? %>
+  <% remove_articles = [] %>
+  <% if current_user && !@articles_to_exclude.nil? %>
+    <% @articles_to_exclude.each do |row| %>
+      <% remove_articles << row["article_id"] %>
+    <% end %>
+  <% end %>
+  <% @articles.each do |item| %>
+    <% next if current_user && remove_articles.include?(item.article_id) %>
     <%= link_to "#{item.article.title}", item.article.url, class: "item" %><br>
     <span class="item-DT">Saved from:</span>
     <span class="item-DD"><%= item.article.host %></span>
-    <span class="item-DT"> on: </span><span class="item-DD"><%= item.created_at.time.to_date %></span><br>
-    <span class="item-DT">Tags: </span><span class="item-DD"><%= link_to item.article.tags, articles_path(search: item.article.tags) %></span>
+    <span class="item-DT"> on: </span><span class="item-DD-small"><%= item.created_at.time.to_date %></span><br>
+    <span class="item-DT">Tags: </span><%= link_to item.article.tags, articles_path(search: item.article.tags), class: "tags-link" %>
     &emsp;
 
     <% if !item.user_rating.nil? %>
       <span class="item-DT"> Rating:</span>
-      <span class="item-DD"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
+      <span class="item-DD-small"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
     <% end %>
     &emsp;
 
+    <br>
+    <%= button_to 'Save', articles_users_path, method: :post, params: { article_user_data: item }, name: "save", class: "hollow button secondary small btn-action" %>
+    <%= button_to 'Save in To-dos', articles_users_path, method: :post, params: { article_user_data: item }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+    <hr>
+  <% end %>
+<% end %>
+
+<h5 class="subheader">Recently Bookmarked Books on the Site</h5>
+<hr>
+<% if !@empty_msg_books.nil? %>
+  <p><%= @empty_msg_books %></p>
+<% elsif !@books.blank? %>
+  <% remove_books = [] %>
+  <% if current_user && !@books_to_exclude.nil? %>
+    <% @books_to_exclude.each do |row| %>
+      <% remove_books << row["book_id"] %>
+    <% end %>
+  <% end %>
+
+  <% @books.each do |item| %>
+    <% next if current_user && remove_books.include?(item.book_id) %>
+    <% book = item.book %>
+    <%= render partial: "layouts/book", object: book %>
+        <br>
+        <%= button_to 'Save', books_users_path, method: :post, params: { book_data: item.book }, name: "save", class: "hollow button secondary small btn-action" %>
+        <%= button_to 'Save in To-dos', books_users_path, method: :post, params: { book_data: item.book }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+      </div>
+    </div>
     <hr>
   <% end %>
 <% end %>

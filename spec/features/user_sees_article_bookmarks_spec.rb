@@ -3,16 +3,15 @@ require "rails_helper"
 feature "User sees bookmarked articles" do
   before(:each) do
     @user1 = FactoryBot.create(:user)
+    @article1_1 = FactoryBot.create(:article)
+    @articles_user1_1 = FactoryBot.create(:articles_user, user_id: @user1.id, article_id: @article1_1.id)
+    @article1_2 = FactoryBot.create(:article)
+    @articles_user1_2 = FactoryBot.create(:articles_user, user_id: @user1.id, article_id: @article1_2.id, access: 'private')
+
     visit new_user_session_path
     fill_in 'Email', with: @user1.email
     fill_in 'Password', with: @user1.password
-    click_button 'Log in'
-
-    @article1_1 = FactoryBot.create(:article)
-    @articles_user1_1 = FactoryBot.create(:articles_user, user_id: @user1.id, article_id: @article1_1.id)
-
-    @article1_2 = FactoryBot.create(:article)
-    @articles_user1_2 = FactoryBot.create(:articles_user, user_id: @user1.id, article_id: @article1_2.id, access: 'private')
+    click_button 'Sign in'
   end
 
   scenario "authorized user sees his/her own list of bookmarked articles" do
@@ -39,7 +38,7 @@ feature "User sees bookmarked articles" do
     visit new_user_session_path
     fill_in 'Email', with: user2.email
     fill_in 'Password', with: user2.password
-    click_button 'Log in'
+    click_button 'Sign in'
     click_link 'My Article Bookmarks'
     expect(page).to have_content("Sorry! You have not bookmarked any article yet!")
     expect(page).to_not have_content(@article1_1.title)
@@ -52,9 +51,9 @@ feature "User sees bookmarked articles" do
     visit new_user_session_path
     fill_in 'Email', with: user2.email
     fill_in 'Password', with: user2.password
-    click_button 'Log in'
+    click_button 'Sign in'
     click_link 'My Article Bookmarks'
-    click_link 'Browse articles bookmarked by other users'
+    click_link 'Browse articles bookmarked by others'
     expect(page).to have_content("Articles bookmarked by other Users")
     expect(page).to have_content(@article1_1.title)
     expect(page).to_not have_content(@article1_2.title)
@@ -69,9 +68,9 @@ feature "User sees bookmarked articles" do
     visit new_user_session_path
     fill_in 'Email', with: user3.email
     fill_in 'Password', with: user3.password
-    click_button 'Log in'
+    click_button 'Sign in'
     click_link 'My Article Bookmarks'
-    click_link 'Browse articles bookmarked by other users'
+    click_link 'Browse articles bookmarked by others'
     expect(page).to have_content("Articles bookmarked by other Users")
     expect(page).to have_content(@article1_1.title)
     expect(page).to_not have_content(article3_1.title)
@@ -87,7 +86,7 @@ feature "User sees bookmarked articles" do
   scenario "user sees bookmarks in public-domain by clicking tags" do
     click_link 'My Article Bookmarks'
     click_link @article1_1.tags
-    expect(page).to have_content("Article Bookmarks - Tag: '#{@article1_1.tags}'")
+    expect(page).to have_content("Search Results for Tag: '#{@article1_1.tags}'")
     expect(page).to have_content(@article1_1.title)
   end
 end

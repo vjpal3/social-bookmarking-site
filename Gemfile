@@ -38,6 +38,7 @@ gem 'foundation-rails', '~> 6.4.3'
 gem 'autoprefixer-rails'
 gem 'foundation-icons-sass-rails'
 gem "devise"
+gem 'httparty'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

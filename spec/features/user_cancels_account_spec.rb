@@ -16,7 +16,7 @@ feature "User cancels account", %Q{
 
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
-    click_button 'Log in'
+    click_button 'Sign in'
 
     find_link("Update Profile").click
     find_button("Cancel my account").click

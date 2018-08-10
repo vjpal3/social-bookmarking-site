@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title><%= content_for?(:title) ? yield(:title) : "MyBookmarks!" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "MyMarker!" %></title>
 
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
@@ -16,7 +16,7 @@
       <div class="top-bar-left">
         <%= link_to root_path, class: "home" do %>
           <i class="fi-bookmark"></i>
-          MyBookmarks
+          MyMarker!
         <% end %>
       </div>
       <div class="top-bar-right">
@@ -35,28 +35,23 @@
 
     <div class="callout large primary">
       <div class="row column text-center">
-        <h3 class="site-title"><i class="fi-bookmark"></i> My Bookmarks <i class="fi-bookmark"></i></h3>
+        <h3 class="site-title"><i class="fi-bookmark"></i> MyMarker! - Bookmarking App <i class="fi-bookmark"></i></h3>
         <h4 class="subheader">Create and save Bookmarks (Articles and Books) quickly!</h4>
         <h5 class="subheader">View recently Bookmarked items by clciking the links below!</h5>
         <p></p>
         <%- if current_user -%>
           <div class="button-group" id="main-menu">
-            <!-- <a class="button custom">Articles</a> -->
             <%= link_to "My Article Bookmarks", articles_path, class: "button custom" %>
             <%= link_to '<i class="fi-plus" aria-hidden="true"></i>'.html_safe, new_article_path, title: "Add Article", class: "button arrow-only custom add-article" %>
           </div>
           <div class="button-group">
-            <a class="button custom">My Book Bookmarks</a>
-            <a class="button arrow-only custom">
-              <i class="fi-plus" aria-hidden="true"></i>
-              <span class="show-for-sr">Add Books</span>
-            </a>
+            <%= link_to "My Book Bookmarks", books_path, class: "button custom" %>
+            <%= link_to '<i class="fi-plus" aria-hidden="true"></i>'.html_safe, search_books_path, title: "Add Book", class: "button arrow-only custom" %>
           </div>
         <%- else %>
           <%= link_to "Articles", articles_path, class: "button custom" %>
-          <a class="button custom">Books</a>
+          <%= link_to "Books", books_path, class: "button custom" %>
         <%- end -%>
-
       </div>
     </div>
 
@@ -75,18 +70,22 @@
           <div class="sticky" data-sticky data-anchor="content">
             <h5>Articles-Tags</h5>
             <ul class="custom-menu">
-              <li><a href="#">Ruby</a></li>
-              <li><a href="#">Rails</a></li>
-              <li><a href="#">Java</a></li>
-              <li><a href="#">Computer Science</a></li>
+              <li><%= link_to "Ruby", articles_path(search: "Ruby"), class: "tags-link" %></li>
+              <li><%= link_to "Rails", articles_path(search: "Rails"), class: "tags-link" %></li>
+              <li><%= link_to "JavaScript", articles_path(search: "JavaScript"), class: "tags-link" %></li>
+              <li><%= link_to "REST API", articles_path(search: "REST API"), class: "tags-link" %>
+              <li><%= link_to "Framework", articles_path(search: "Framework"), class: "tags-link" %></li>
             </ul>
 
             <h5>Books-Categories</h5>
             <ul class="custom-menu">
-              <li><a href="#">Science</a></li>
-              <li><a href="#">Biography</a></li>
-              <li><a href="#">Thriller</a></li>
-              <li><a href="#">Psycology</a></li>
+              <li><%= link_to "Business & Economics", search_books_path(book_category_search: "Business & Economics"), class: "tags-link" %></li>
+              <li><%= link_to "Health & Fitness", search_books_path(book_category_search: "Health & Fitness"), class: "tags-link" %></li>
+              <li><%= link_to "Photography", search_books_path(book_category_search: "Photography"), class: "tags-link" %></li>
+              <li><%= link_to "Self-Help", search_books_path(book_category_search: "Self-Help"), class: "tags-link" %></li>
+              <li><%= link_to "Travel", search_books_path(book_category_search: "Travel"), class: "tags-link" %></li>
+              <li><%= link_to "Fiction", search_books_path(book_category_search: "Fiction"), class: "tags-link" %></li>
+              <li><%= link_to "Biography", search_books_path(book_category_search: "Biography"), class: "tags-link" %></li>
             </ul>
           </div>
         </div>

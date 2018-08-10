@@ -1,0 +1,90 @@
+<%= render "search_book_form" %>
+<hr >
+<% if !user_signed_in? %>
+  <h5 class="page-heading">Books bookmarked by other Users</h5>
+<% else %>
+  <h5 class="page-heading">My Book Bookmarks</h5>
+  <p class="heading-link">
+    <%= link_to "Browse Books bookmarked by others", books_path(show_available: "Show Available") %>
+  </p>
+<% end %>
+<p></p>
+<% if !@empty_msg_books.nil? %>
+  <p><%= @empty_msg_books %></p>
+<% else %>
+  <% remove_books = [] %>
+  <% if current_user && !@books_to_exclude.nil? %>
+    <% @books_to_exclude.each do |row| %>
+      <% remove_books << row["book_id"] %>
+    <% end %>
+  <% end %>
+
+  <% @books.each do |item| %>
+    <% next if current_user && remove_books.include?(item.book_id) %>
+    <%= render partial: "layouts/book", object: item.book %>
+        <% if (current_user && current_user.id == item.user_id) %>
+          <div class="grid-x grid-margin-x">
+            <div class="small-12 large-4 cell">
+              <span class="item-DD-small"><strong>Status: </strong><%= item.status %></span>
+              <button class="hollow button secondary small btn-action" type="button" data-toggle="change-status-dropdown<%= item.id %>" >Change Status</button>
+              <div class="dropdown-pane" data-position="bottom" data-alignment="center" id="change-status-dropdown<%= item.id %>" data-dropdown data-auto-focus="true">
+                <%= form_for item do |f| %>
+                  <div class="grid-container">
+                    <div class="grid-x grid-margin-x">
+                      <div class="cell medium-12">
+                          <%= f.radio_button :status, "read" %>
+                          <%= f.label :status, "read", value: "read" %>
+                          <%= f.radio_button :status, "To-do" %>
+                          <%= f.label :status, "To-do", value: "To-do" %>
+                      </div>
+                      <div class="cell medium-12">
+                          <%= f.submit "Submit", name: "change_status", class: "button tiny secondary change-status-btn" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            <div class="small-12 large-8 cell">
+              <span class="item-DD-small"><strong>User Rating: </strong>
+              <% if !item.user_rating.nil? %>
+                <%= @ratings_collection.assoc(item.user_rating)[1] %>
+              <% else %>
+                None
+              <% end %>
+              </span>
+              <button class="hollow button secondary small btn-action" type="button" data-toggle="change-rating-dropdown<%= item.id %>" >Change User Rating</button>
+              <div class="dropdown-pane" data-position="bottom" data-alignment="center" id="change-rating-dropdown<%= item.id %>" data-dropdown data-auto-focus="true">
+                <%= form_for item do |f| %>
+                  <div class="grid-container">
+                    <div class="grid-x grid-margin-x">
+                      <div class="cell medium-12">
+                        <% @ratings_collection.each do |ratings_array| %>
+                          <%= f.radio_button :user_rating, ratings_array.first %>
+                          <%= f.label :user_rating, "#{ratings_array.last}", value: "#{ratings_array.first}" %>
+                        <% end %>
+                      </div>
+                      <div class="cell medium-12">
+                          <%= f.submit "Submit", name: "change_rating", class: "button tiny secondary change-status-btn" %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <p>
+          <%= link_to 'Delete Bookmark', books_user_path(item),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' },  class: "hollow button secondary small btn-action" %>
+          </p>
+        <% elsif (current_user && current_user.id != item.user_id) || !user_signed_in? %>
+          <br>
+          <%= button_to 'Save', books_users_path, method: :post, params: { book_data: item.book }, name: "save", class: "hollow button secondary small btn-action" %>
+          <%= button_to 'Save in To-dos', books_users_path, method: :post, params: { book_data: item.book }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+        <% end %>
+    </div>
+  </div>
+  <hr>
+  <% end %>
+<% end %>

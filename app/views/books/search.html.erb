@@ -1,0 +1,20 @@
+<%= render "search_book_form" %>
+
+<% if @empty_msg %>
+  <p class="subheader"><%= @empty_msg %></p>
+<% else %>
+  <!-- This condition required for the same page is rendering form as well as results of form submission. -->
+  <% if !@books.blank? %>
+  <p class="subheader">Search Results: Total: <%= @books.count %></p>
+  <br>
+  <% @books.each do |book| %>
+    <%= render partial: "layouts/book", object: book %>
+    <br>
+    <%= button_to 'Save', books_users_path, method: :post, params: { book_data: book }, name: "save", class: "hollow button secondary small btn-action" %>
+    <%= button_to 'Save in To-dos', books_users_path, method: :post, params: { book_data: book }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+      </div>
+    </div>
+    <hr>
+  <% end %>
+  <% end %>
+<% end %>
