@@ -3,9 +3,13 @@ class ArticlesController < ApplicationController
 
   def index
     if params[:search]
-      @articles = ArticlesUser.includes(:article).where(articles: { tags: params[:search]} ).where(articles_users: { access: "public" }).order(created_at: :desc)
+      # @articles = ArticlesUser.includes(:article).where(articles: { tags: params[:search]} ).where(articles_users: { access: "public" }).order(created_at: :desc)
+# "title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%"
+      @articles = ArticlesUser.includes(:article).where("tags ILIKE ?", "%#{params[:search]}%").references(:articles).where(articles_users: { access: "public" }).order(created_at: :desc)
       if @articles.blank?
-        @empty_msg = "Sorry! No matches found for the tags #{params[:search]}."
+        @empty_msg_articles = "Sorry! No matches found for the tags #{params[:search]}."
+      else
+        @articles = @articles.uniq(&:article_id)
       end
       @search_msg = params[:search]
 
@@ -13,27 +17,39 @@ class ArticlesController < ApplicationController
       if current_user
         @user = User.find(current_user.id)
       end
-      #if current_user clicks 'Browse all articles'
+      #if current_user clicks 'Browse articles book,arked by others'
       if (current_user && params[:show_available])
-        # @articles = Article.joins(:articles_users).where("articles_users.user_id != ?", @user.id).where(articles_users: { access: "public" }).order(created_at: :desc)
+        # remove the bookmarks that are saved by the current user and may or may not be saved by others.
         @articles = ArticlesUser.includes(:article).where.not(articles_users: { user_id: @user.id }).where(articles_users: { access: "public" }).order(created_at: :desc)
         if @articles.blank?
-          @empty_msg = "Sorry! No article-bookmarks available in public domain."
+          @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
+        else
+          @articles = @articles.uniq(&:article_id)
+          # remove the bookmarks that are saved by others as well as current_user
+          sql = "select article_id from articles_users where article_id in (select article_id  from articles_users group by article_id having count(*) > 1) and user_id = #{current_user.id}"
+          @articles_to_exclude = ActiveRecord::Base.connection.exec_query(sql)
+          if @articles_to_exclude.length == @articles.length
+            @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
+          end
+
         end
         @msg_access = "show public access"
 
       elsif current_user
         @articles = ArticlesUser.includes(:article).where(articles_users: { user_id: @user.id }).order(created_at: :desc)
         if @articles.blank?
-          @empty_msg = "Sorry! You have not bookmarked any article yet!"
+          @empty_msg_articles = "Sorry! You have not bookmarked any article yet! Please click the links (+) above to create bookmarks"
         else
           @msg_access = "show private access"
         end
 
       elsif !user_signed_in?
         @articles = ArticlesUser.includes(:article).where(articles_users: { access: "public" }).order(created_at: :desc)
+
         if @articles.blank?
-          @empty_msg = "Sorry! No article-bookmarks available in public domain."
+          @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
+        else
+          @articles = @articles.uniq(&:article_id)
         end
       end
    end
@@ -76,7 +92,7 @@ class ArticlesController < ApplicationController
       @articles_user.user = @user
       @articles_user.article = @article
       if @articles_user.save
-        redirect_to @article, notice: 'Bookmark was successfully saved.'
+        redirect_to @article, notice: 'Bookmark was successfully added.'
       else
         render 'new'
       end
@@ -97,22 +113,20 @@ class ArticlesController < ApplicationController
     @articles_user = ArticlesUser.where("article_id = ? and user_id = ?", @article.id, @user.id).first
 
     if @article.update(articles_params) && @articles_user.update(articles_users_params)
-      # redirect_to thing_path(@thing, foo: params[:foo])
-
       redirect_to @article, notice: 'Bookmark was updated successfully.'
     else
       render 'edit'
     end
   end
 
-  def destroy
-    @user = User.find(current_user.id)
-    @article = Article.find(params[:id])
-    @articles_user = ArticlesUser.where("article_id = ? and user_id = ?", @article.id, @user.id).first
-    @article.destroy
-    @articles_user.destroy
-    redirect_to articles_path, notice: 'Bookmark was deleted successfully.'
-  end
+  # def destroy
+  #   @user = User.find(current_user.id)
+  #   @article = Article.find(params[:id])
+  #   @articles_user = ArticlesUser.where("article_id = ? and user_id = ?", @article.id, @user.id).first
+  #   @article.destroy
+  #   @articles_user.destroy
+  #   redirect_to articles_path, notice: 'Bookmark was deleted successfully.'
+  # end
 
   private
     def articles_params
@@ -126,52 +140,8 @@ class ArticlesController < ApplicationController
   def authorize_user
     if !user_signed_in?
       flash[:notice] = "Sign in required before proceeding."
-      redirect_to root_path
+      redirect_to new_user_session_path
     end
   end
 
 end
-
-
-
-#   def index
-#     @items = Item.order(created_at: :desc)
-#   end
-#
-#   def show
-#     @item = Item.find(params[:id])
-#     # Following line is required, otherwise, ActionView::Template::Error:
-#     #   First argument in form cannot contain nil or be empty
-#     @review = @item.reviews.build(params[:review])
-#   end
-#
-#   def new
-#     @item = Item.new
-#   end
-#
-#   def edit
-#     @item = Item.find(params[:id])
-#   end
-#
-#
-#
-#   def update
-      # @item = Item.find(params[:id])
-      # if @item.update(items_params)
-      #   redirect_to @item, notice: 'Item was successfully updated.'
-      # else
-      #   render 'edit'
-      # end
-#   end
-#
-#   def destroy
-#     @item = Item.find(params[:id])
-#     @item.destroy
-#     redirect_to items_path
-#   end
-#
-#
-#
-#
-#
-# end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_06_193918) do
+ActiveRecord::Schema.define(version: 2018_08_05_212423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,19 +50,9 @@ ActiveRecord::Schema.define(version: 2018_08_06_193918) do
     t.integer "googlebooks_rating"
     t.string "categories"
     t.string "thumbnail_url"
-    t.boolean "kid_friendly", default: false
-    t.boolean "approved", default: false
+    t.boolean "kid_friendly"
+    t.boolean "approved"
     t.integer "approved_by"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "books_users", id: :serial, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "book_id", null: false
-    t.integer "user_rating"
-    t.string "access", limit: 255, default: "public"
-    t.string "status", limit: 255, default: "read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

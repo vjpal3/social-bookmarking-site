@@ -12,11 +12,11 @@ feature "User successfully sings in", %Q{
   scenario "successful sign in" do
     user = FactoryBot.create(:user)
     visit new_user_session_path
-    
+
     fill_in 'Email', with: user.email
     fill_in 'Password', with: user.password
 
-    click_button 'Log in'
+    click_button 'Sign in'
 
     expect(page).to have_content('Signed in successfully')
     expect(page).to have_content("Welcome #{user.first_name}!")
@@ -27,7 +27,7 @@ feature "User successfully sings in", %Q{
   scenario 'specify invalid credentials' do
     visit new_user_session_path
 
-    click_button 'Log in'
+    click_button 'Sign in'
     expect(page).to have_content('Invalid Email or password')
     expect(page).to_not have_content('Sign Out')
     expect(page.has_no_css?('a.fi-plus')).to eq true

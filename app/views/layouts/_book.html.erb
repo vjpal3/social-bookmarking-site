@@ -1,0 +1,21 @@
+<div class="grid-x grid-margin-x">
+  <div class="small-2 large-2 cell">
+    <img src="<%= book.thumbnail_url %>" class="book-thumbnail">
+  </div>
+  <div class="small-10 large-10 cell ">
+    <span class="item-DD-bold"><%= book.title %></span>
+    <span class="item-DT"> by </span>
+    <span class="item-DD-purple"><%= book.authors %></span>
+    <span class="item-DT"> (<%= book.published_at %>) </span>
+
+    <div class="grid-x grid-margin-x">
+      <div class="small-12 large-4 cell">
+        <span class="item-DD-small">Category: <%= book.categories %></span>
+      </div>
+      <div class="small-12 large-8 cell">
+        <% if !book.googlebooks_rating.nil? %>
+          <span class="item-DD-small">Google-books rating: <%= book.googlebooks_rating %></span>
+        <% end %>
+      </div>
+    </div>
+    <span class="item-DT"><%= book.description %></span>

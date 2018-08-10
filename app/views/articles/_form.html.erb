@@ -35,7 +35,7 @@
       <div class="small-11 large-10 cell">
         <%= articles_user_fields.check_box :access, {}, "private", "public" %>
         <%= articles_user_fields.label :access, "Private" %>
-        <%= articles_user_fields.check_box :status, {}, "To-do", "Read" %>
+        <%= articles_user_fields.check_box :status, {}, "To-do", "read" %>
         <%= articles_user_fields.label :status, "To-do" %>
       </div>
       <div class="large-1 cell"></div>
@@ -62,7 +62,7 @@
 
     <div class="small-1 large-1 cell"> </div>
     <div class="small-11 large-10 cell">
-      <%= f.submit @article.persisted? ? "Update Bookmark" : "Save Bookmark", class: "button secondary " %>
+      <%= f.submit @article.persisted? ? "Update Bookmark" : "Add Bookmark", class: "button secondary " %>
     </div>
     <div class="large-1 cell"></div>
   </div>

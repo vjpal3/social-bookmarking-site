@@ -1,0 +1,5 @@
+<p class="page-heading" >Search Book</p>
+<form action="<%= search_books_url %>" method="get" id="book-search-form">
+  <%= text_field_tag :book_search, params[:book_search], placeholder: "Enter keyword (title, descrption, author)", class: "search-input" %>
+  <%= submit_tag "Search Books", name: nil, class: "button secondary " %>
+</form>
