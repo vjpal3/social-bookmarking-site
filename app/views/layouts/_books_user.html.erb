@@ -1,0 +1,26 @@
+
+
+<div id="change-status-div<%= book.id %>">
+
+<span class="item-DD-small"><strong>Status: </strong><%= book.status %></span>
+        <button class="hollow button secondary small btn-action" type="button" data-toggle="change-status-dropdown<%= book.id %>" >Change Status</button>
+        <div class="dropdown-pane" data-position="bottom" data-alignment="center" id="change-status-dropdown<%= book.id %>" data-dropdown data-auto-focus="true">
+
+          <%= form_with model: BooksUser.find(book.id), data: {'js-change-status-form' => true} do |f| %>
+            <div class="grid-container">
+              <div class="grid-x grid-margin-x">
+                <div class="cell medium-12">
+                    <%= f.radio_button :status, "read" %>
+                    <%= f.label :status, "read", value: "read" %>
+                    <%= f.radio_button :status, "To-do" %>
+                    <%= f.label :status, "To-do", value: "To-do" %>
+                </div>
+                <div class="cell medium-12">
+                    <%= f.submit "Submit", name: "change_status", id: "change-status-btn#{book.id}", class: "button tiny secondary change-status-btn" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+    </div>

@@ -21,15 +21,18 @@ class BooksUsersController < ApplicationController
   end
 
   def update
+    #Updates here are using AJAX features.
     @ratings_collection = BooksUser::RATINGS
-    book = BooksUser.find(params[:id])
+    @item = BooksUser.find(params[:id])
     if params[:change_status]
-      if book.update(status: params[:books_user]["status"])
-        redirect_to books_path, notice: 'Book-status was successfully updated.'
+      if @item.update(status: params[:books_user]["status"])
+        # redirect_to books_path, notice: 'Book-status was successfully updated.'
+        render partial: "books/change_status_form", locals: {item: @item}
       end
     elsif params[:change_rating]
-      if book.update(books_users_params)
-        redirect_to books_path, notice: 'Book-rating was successfully updated.'
+      if @item.update(books_users_params)
+        # redirect_to books_path, notice: 'Book-rating was successfully updated.'
+        render partial: "books/change_rating_form", locals: {item: @item}
       end
     end
   end
@@ -38,7 +41,8 @@ class BooksUsersController < ApplicationController
     @user = User.find(current_user.id)
     @books_user = BooksUser.find(params[:id])
     @books_user.destroy
-    redirect_to books_path, notice: 'Bookmark was deleted successfully.'
+    # redirect_to books_path, notice: 'Bookmark was deleted successfully.'
+    render "books/destroy", locals: {item: params[:id]}
   end
 
   private
@@ -53,5 +57,4 @@ class BooksUsersController < ApplicationController
         redirect_to new_user_session_path
       end
     end
-
 end

@@ -33,19 +33,27 @@ class BooksController < ApplicationController
         @books = @books.uniq(&:book_id)
       end
     end
-
   end
 
   def search
     if params[:book_search]
-      @books = Book.where("title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%", "%#{params[:book_search]}%", "%#{params[:book_search]}%")
+      if current_user
+        @books = Book.where("title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%", "%#{params[:book_search]}%", "%#{params[:book_search]}%").where("id NOT IN(select book_id from books_users where user_id = ?)", current_user.id)
+        # @books = Book.joins(:books_users).where.not(books_users: { user_id: current_user.id }).where("title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%", "%#{params[:book_search]}%", "%#{params[:book_search]}%")
+      else
+        @books = Book.where("title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%", "%#{params[:book_search]}%", "%#{params[:book_search]}%")
+      end
     elsif params[:book_category_search]
-      @books = Book.where("categories ILIKE ?", "%#{params[:book_category_search]}%")
+      if current_user
+        # @books = Book.joins(:books_users).where.not(books_users: { user_id: current_user.id }).where("categories ILIKE ?", "%#{params[:book_category_search]}%")
+        @books = Book.where("categories ILIKE ?", "%#{params[:book_category_search]}%").where("id NOT IN(select book_id from books_users where user_id = ?)", current_user.id)
+      else
+        @books = Book.where("categories ILIKE ?", "%#{params[:book_category_search]}%")
+      end
     end
 
     if @books.blank?
       @empty_msg_books = "Sorry! no results matched your query."
     end
   end
-
 end

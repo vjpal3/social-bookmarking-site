@@ -9,9 +9,25 @@
 //
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
-//= require jquery
-//= require rails-ujs
+//= require jquery3
+//= require jquery_ujs
 //= require foundation
 //= require activestorage
 //= require_tree .
 $(function(){ $(document).foundation(); });
+
+$(document).ready(function() {
+
+  $('[data-js-change-status-form]').on("ajax:success", function(event, data, status, xhr){
+    var currentId = $(event.target.parentNode).attr('id').slice(22)
+    $("#change-status-div"+currentId).html(xhr.responseText).foundation();
+    Foundation.reInit($("[data-dropdown-pane]"));
+  });
+
+  $('[data-js-change-rating-form]').on("ajax:success", function(event, data, status, xhr){
+    var currentId = $(event.target.parentNode).attr('id').slice(22)
+    $("#change-rating-div"+currentId).html(xhr.responseText).foundation();
+    Foundation.reInit($("[data-dropdown-pane]"));
+  });
+
+});

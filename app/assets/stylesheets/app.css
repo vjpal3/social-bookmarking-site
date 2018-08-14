@@ -1,11 +1,10 @@
+a.sign-up-link {
+  display: inline-block;
+}
 
 .button {
-  /* margin-bottom: 0;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;*/
   font-weight: bold;
-   /* display: block; */
-   margin: 0 auto;
+  margin: 0 auto;
 }
 
 .callout.large {
@@ -13,10 +12,7 @@
     padding-bottom: 0;
 }
 .callout.primary {
-  /* background-color: #cef5eb; */
-  /* background-color: #FFE7AB; -- yellowish */
   background-color: #efeecc;
-  /* background-image: url("background.png"); */
 }
 
 .change-status-btn {
@@ -26,21 +22,15 @@
 
 .dropdown-pane {
   width: 350px;
-
 }
 
 .top-bar, .top-bar ul, #user-profile {
-    /* background-color: #E1C8A3; */
-    background-color: #563D7C;
-    /* background-color: #6F4AC4; */
+  background-color: #563D7C;
 }
 
 .button.custom {
-  /* background-color: #999; */
-   margin-bottom: 0;
-   margin-top: 10px;
-  /*padding-top: 0.5rem;
-  padding-bottom: 0.5rem; */
+  margin-bottom: 0;
+  margin-top: 10px;
   font-weight: bold;
   background-color: #563D7C;
 }
@@ -63,20 +53,9 @@
   margin-top: 0.5rem;
 }
 
-/* .edit-delete-links {
-  color: #563D7C;
-  font-weight: bold;
-}
-
-.edit-delete-links:hover {
-  color: #2E0D23;
-  font-weight: bold;
-} */
-
 form.button_to {
   display: inline-block;
 }
-
 
 .top-bar ul li.menu-text {
   color: #ffffff;
@@ -87,7 +66,6 @@ form.button_to {
 }
 
 .top-bar ul li a:hover {
-  /* color: #f9d475; */
   color: #f9ba16;
 }
 
@@ -139,7 +117,6 @@ a.item:hover {
 
 img.book-thumbnail {
   border: 2px solid #808080;
-
 }
 
 .form-divider {
@@ -148,9 +125,7 @@ img.book-thumbnail {
 }
 
 .item-DT {
-  /* color: #808080; */
   color: #676077;
-  /* font-weight: bold; */
   font-size: 0.9rem;
 }
 .item-DD {
@@ -179,9 +154,6 @@ a.tags-link {
 }
 
 a.tags-link:hover {
-  /* font-size: 0.9rem;
-  text-decoration: underline;
-  color: #563D7C; */
   font-weight: bold;
 }
 
@@ -207,7 +179,6 @@ a.tags-link:hover {
 }
 
 .heading-tags {
-  /* color: #6d5031; */
   color: #8C6673;
   font-style: italic;
   font-weight: 300;
@@ -216,7 +187,6 @@ a.tags-link:hover {
 
 .icon-lock-style {
   text-shadow: 0 1px 1px rgba(0,0,0,0.25);
-  /* color: #A9014B; */
   color: red;
 }
 
