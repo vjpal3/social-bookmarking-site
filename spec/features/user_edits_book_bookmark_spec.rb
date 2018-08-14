@@ -1,4 +1,4 @@
-require "rails_helper"
+ require "rails_helper"
 
 feature "User edits book bookmark", %Q{
   As an authorized user,

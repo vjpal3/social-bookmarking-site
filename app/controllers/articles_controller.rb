@@ -3,8 +3,6 @@ class ArticlesController < ApplicationController
 
   def index
     if params[:search]
-      # @articles = ArticlesUser.includes(:article).where(articles: { tags: params[:search]} ).where(articles_users: { access: "public" }).order(created_at: :desc)
-# "title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%"
       @articles = ArticlesUser.includes(:article).where("tags ILIKE ?", "%#{params[:search]}%").references(:articles).where(articles_users: { access: "public" }).order(created_at: :desc)
       if @articles.blank?
         @empty_msg_articles = "Sorry! No matches found for the tags #{params[:search]}."
@@ -31,7 +29,6 @@ class ArticlesController < ApplicationController
           if @articles_to_exclude.length == @articles.length
             @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
           end
-
         end
         @msg_access = "show public access"
 
@@ -79,15 +76,15 @@ class ArticlesController < ApplicationController
   def create
     @user = User.find(current_user.id)
     @article = Article.new(articles_params)
+
     host = URI.parse(params[:article][:url]).host
     if !host.nil?
       @article.host = host.start_with?('www.') ? host[4..-1] : host
     end
     @article.shared_by = @user.id
-
     @ratings_collection = ArticlesUser::RATINGS
-
     @articles_user = ArticlesUser.new(articles_users_params)
+
     if @article.save
       @articles_user.user = @user
       @articles_user.article = @article
@@ -105,28 +102,19 @@ class ArticlesController < ApplicationController
     @ratings_collection = ArticlesUser::RATINGS
     @user = User.find(current_user.id)
     @article = Article.find(params[:id])
+
     host = URI.parse(params[:article][:url]).host
     if !host.nil?
       @article.host = host.start_with?('www.') ? host[4..-1] : host
     end
 
     @articles_user = ArticlesUser.where("article_id = ? and user_id = ?", @article.id, @user.id).first
-
     if @article.update(articles_params) && @articles_user.update(articles_users_params)
       redirect_to @article, notice: 'Bookmark was updated successfully.'
     else
       render 'edit'
     end
   end
-
-  # def destroy
-  #   @user = User.find(current_user.id)
-  #   @article = Article.find(params[:id])
-  #   @articles_user = ArticlesUser.where("article_id = ? and user_id = ?", @article.id, @user.id).first
-  #   @article.destroy
-  #   @articles_user.destroy
-  #   redirect_to articles_path, notice: 'Bookmark was deleted successfully.'
-  # end
 
   private
     def articles_params
@@ -143,5 +131,4 @@ class ArticlesController < ApplicationController
       redirect_to new_user_session_path
     end
   end
-
 end

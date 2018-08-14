@@ -5,10 +5,10 @@ Rails.application.routes.draw do
 
   resources :articles, except: [:destroy]
 
-  resources :books, except: [:destroy] do
+  resources :books, only: [:index] do
     get 'search', on: :collection
   end
 
   resources :articles_users, only: [:create, :destroy]
-  resources :books_users, only: [:new, :create, :update, :destroy]
+  resources :books_users, only: [:create, :update, :destroy]
 end

@@ -2,7 +2,6 @@
   <h4 class="page-heading">Welcome to Admin Section</h4>
   <p></p>
   <form action="<%= root_path %>" method="get" id="api-search-form">
-
     <%= text_field_tag :api_search, params[:api_search], placeholder: "Enter keyword to download books", class: "search-input" %>
     <%= submit_tag "Search API and Download Books Data", name: nil, class: "button secondary " %>
   </form>
@@ -15,14 +14,15 @@
     <% if !@books_from_api.blank? %>
       <p class="subheader"><em>Following Search Results were successfully saved to the database: <%= @books_from_api.count %> found. </em></p>
       <p></p>
-
       <% @books_from_api.each do |book| %>
-            <%= render partial: "layouts/book", object: book %>
+        <div id="delete-div<%= book.id %>" >
+          <div class="grid-x grid-margin-x">
+              <%= render partial: "layouts/book", object: book %>
+            </div> <!-- closing div for partial -->
+            <div class="small-12 large-12 cell "><hr></div>
           </div>
-        </div>
-        <hr>
+        </div> <!-- delete-div -->
       <% end %>
-
     <% end %>
   <% end %>
 <% end %>
@@ -53,7 +53,6 @@
       <span class="item-DD-small"><%= @ratings_collection.assoc(item.user_rating)[1] %></span>
     <% end %>
     &emsp;
-
     <br>
     <%= button_to 'Save', articles_users_path, method: :post, params: { article_user_data: item }, name: "save", class: "hollow button secondary small btn-action" %>
     <%= button_to 'Save in To-dos', articles_users_path, method: :post, params: { article_user_data: item }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
@@ -75,13 +74,16 @@
 
   <% @books.each do |item| %>
     <% next if current_user && remove_books.include?(item.book_id) %>
-    <% book = item.book %>
-    <%= render partial: "layouts/book", object: book %>
-        <br>
-        <%= button_to 'Save', books_users_path, method: :post, params: { book_data: item.book }, name: "save", class: "hollow button secondary small btn-action" %>
-        <%= button_to 'Save in To-dos', books_users_path, method: :post, params: { book_data: item.book }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+    <div id="delete-div<%= item.id %>" >
+      <div class="grid-x grid-margin-x">
+        <% book = item.book %>
+          <%= render partial: "layouts/book", object: book %>
+          <br>
+          <%= button_to 'Save', books_users_path, method: :post, params: { book_data: item.book }, name: "save", class: "hollow button secondary small btn-action" %>
+          <%= button_to 'Save in To-dos', books_users_path, method: :post, params: { book_data: item.book }, name: "save_to_do", class: "hollow button secondary small btn-action" %>
+        </div>
+        <div class="small-12 large-12 cell "><hr></div>
       </div>
-    </div>
-    <hr>
+    </div> <!--This is delete-div -->
   <% end %>
 <% end %>
