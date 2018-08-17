@@ -6,6 +6,8 @@
   </p>
   <br>
   <span class="heading-tags"> Search Results for Tag: '<%= @search_msg %>', <%= @articles.count %> found. </span>
+  <br>
+  <span class="heading-tags">Please note: Only the bookmarks available in public domain will be shown here.</span>
 <% else %>
   <% if !user_signed_in? || @msg_access == "show public access"%>
     <h5 class="page-heading">Articles bookmarked by other Users</h5>
@@ -18,7 +20,7 @@
 <% end %>
 <hr>
 <% if !@empty_msg_articles.nil? %>
-  <p><%= @empty_msg_articles %></p>
+  <p class="empty_message"><%= @empty_msg_articles %></p>
 <% else %>
   <!-- This logic is to remove the bookmarks that the current_user as well as other users have already saved. -->
   <% remove_articles = [] %>
@@ -53,7 +55,7 @@
 
       <%= link_to 'Delete', articles_user_path(item),
                   method: :delete,
-                  data: { confirm: 'Are you sure?' },  class: "hollow button secondary small btn-action delete_article" %>
+                  data: { confirm: 'Are you sure?' },  class: "hollow button secondary small btn-action" %>
     <% end %>
 
     <% if (current_user && current_user.id != item.user_id) || !user_signed_in? %>

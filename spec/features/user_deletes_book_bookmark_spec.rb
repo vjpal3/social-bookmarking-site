@@ -23,8 +23,8 @@ feature "User deletes book bookmarks" , %Q{
 
   scenario "authorized user deletes bookmark from books listing page" do
     click_link('My Book Bookmarks')
-    find_link('Delete', match: :first).click
-    expect(page).to have_content("Bookmark was deleted successfully.")
+    find_link('Delete Bookmark', match: :first).click
+    # expect(page).to have_content("Bookmark was deleted successfully.")
     expect(page).to_not have_content(@book1.title)
   end
 
@@ -38,13 +38,13 @@ feature "User deletes book bookmarks" , %Q{
     click_button 'Sign in'
     click_link 'My Book Bookmarks'
     click_link 'Browse Books bookmarked by others'
-    expect(page).to have_no_link('Delete')
+    expect(page).to have_no_link('Delete Bookmark')
   end
 
   scenario "un-authenticated user tries to delete bookmark" do
     click_link "Sign Out"
     click_link 'Books'
-    expect(page).to have_no_link('Delete')
+    expect(page).to have_no_link('Delete Bookmark')
   end
 
 end

@@ -1,11 +1,11 @@
 <%= render "search_book_form" %>
 
-<% if @empty_msg %>
-  <p class="subheader"><%= @empty_msg %></p>
+<% if @empty_msg_books %>
+  <p class="subheader"><%= @empty_msg_books %></p>
 <% else %>
   <!-- This condition required for the same page is rendering form as well as results of form submission. -->
   <% if !@books.blank? %>
-    <p class="subheader">Search Results: Total: <%= @books.count %></p>
+    <p class="subheader">Search Results for Books: <em>'<%= @search_query %>'</em>, Total: <%= @books.count %> found.</p>
     <br>
     <% @books.each do |book| %>
       <div id="delete-div<%= book.id %>" >

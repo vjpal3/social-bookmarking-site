@@ -41,8 +41,7 @@ class BooksUsersController < ApplicationController
     @user = User.find(current_user.id)
     @books_user = BooksUser.find(params[:id])
     @books_user.destroy
-    # redirect_to books_path, notice: 'Bookmark was deleted successfully.'
-    render "books/destroy", locals: {item: params[:id]}
+    render "books/destroy.js.erb", locals: {item: params[:id]}
   end
 
   private

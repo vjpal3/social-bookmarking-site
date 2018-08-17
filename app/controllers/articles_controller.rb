@@ -20,14 +20,14 @@ class ArticlesController < ApplicationController
         # remove the bookmarks that are saved by the current user and may or may not be saved by others.
         @articles = ArticlesUser.includes(:article).where.not(articles_users: { user_id: @user.id }).where(articles_users: { access: "public" }).order(created_at: :desc)
         if @articles.blank?
-          @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
+          @empty_msg_articles = "Sorry! No article-bookmarks available in public domain yet!"
         else
           @articles = @articles.uniq(&:article_id)
           # remove the bookmarks that are saved by others as well as current_user
           sql = "select article_id from articles_users where article_id in (select article_id  from articles_users group by article_id having count(*) > 1) and user_id = #{current_user.id}"
           @articles_to_exclude = ActiveRecord::Base.connection.exec_query(sql)
           if @articles_to_exclude.length == @articles.length
-            @empty_msg_articles = "Sorry! No article-bookmarks available in public domain."
+            @empty_msg_articles = "Sorry! No article-bookmarks available in public domain yet!"
           end
         end
         @msg_access = "show public access"
@@ -35,7 +35,7 @@ class ArticlesController < ApplicationController
       elsif current_user
         @articles = ArticlesUser.includes(:article).where(articles_users: { user_id: @user.id }).order(created_at: :desc)
         if @articles.blank?
-          @empty_msg_articles = "Sorry! You have not bookmarked any article yet! Please click the links (+) above to create bookmarks"
+          @empty_msg_articles = "You have not bookmarked any article yet! Please click the links (+) above to create bookmarks"
         else
           @msg_access = "show private access"
         end
