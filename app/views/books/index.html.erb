@@ -10,7 +10,7 @@
 <% end %>
 <p></p>
 <% if !@empty_msg_books.nil? %>
-  <p><%= @empty_msg_books %></p>
+  <p class="empty_message"><%= @empty_msg_books %></p>
 <% else %>
   <% remove_books = [] %>
   <% if current_user && !@books_to_exclude.nil? %>

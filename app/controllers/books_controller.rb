@@ -23,7 +23,7 @@ class BooksController < ApplicationController
     elsif current_user
       @books = BooksUser.includes(:book).where(books_users: { user_id: @user.id }).order(created_at: :desc)
       if @books.blank?
-        @empty_msg_books = "Sorry! You have not bookmarked any books yet! Please click the links (+) above to create bookmarks"
+        @empty_msg_books = "You have not bookmarked any books yet! Please click the links (+) above to create bookmarks."
       end
     elsif !user_signed_in?
       @books = BooksUser.includes(:book).order(created_at: :desc)
@@ -43,6 +43,7 @@ class BooksController < ApplicationController
       else
         @books = Book.where("title ILIKE ? OR authors ILIKE ? OR description ILIKE ?", "%#{params[:book_search]}%", "%#{params[:book_search]}%", "%#{params[:book_search]}%")
       end
+      @search_query = params[:book_search]
     elsif params[:book_category_search]
       if current_user
         # @books = Book.joins(:books_users).where.not(books_users: { user_id: current_user.id }).where("categories ILIKE ?", "%#{params[:book_category_search]}%")
@@ -50,9 +51,10 @@ class BooksController < ApplicationController
       else
         @books = Book.where("categories ILIKE ?", "%#{params[:book_category_search]}%")
       end
+      @search_query = params[:book_category_search]
     end
 
-    if @books.blank?
+    if (params[:book_search] || params[:book_category_search]) && @books.blank?
       @empty_msg_books = "Sorry! no results matched your query."
     end
   end

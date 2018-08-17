@@ -40,7 +40,7 @@ feature "User sees bookmarked articles" do
     fill_in 'Password', with: user2.password
     click_button 'Sign in'
     click_link 'My Article Bookmarks'
-    expect(page).to have_content("Sorry! You have not bookmarked any article yet!")
+    expect(page).to have_content("You have not bookmarked any article yet!")
     expect(page).to_not have_content(@article1_1.title)
     expect(page).to_not have_content(@article1_2.title)
   end

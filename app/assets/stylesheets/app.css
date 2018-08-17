@@ -107,12 +107,17 @@ a.home {
 a.item {
   color: #6d5031;
   font-weight: bold;
-
 }
 a.item:hover {
   /* color: #9e3e50; */
   color: #563D7C;
   text-decoration: underline;
+}
+
+.empty_message {
+  color: #6d5031;
+  font-weight: bold;
+  font-style: italic;
 }
 
 img.book-thumbnail {

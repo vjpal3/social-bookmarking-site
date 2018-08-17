@@ -6,30 +6,32 @@
     <span data-tooltip tabindex="1" title="Private Bookmark"><i class="fi-lock icon-lock-style" aria-hidden="true"></i></span>
   <% end %>
   <%= link_to "#{@article.title}", @article.url, class: "item" %><br>
+  <span class="item-DT">Url: </span>
+  <span class="item-DD"><%= link_to @article.url, @article.url, class: "item" %></span><br>
   <span class="item-DT">Saved from:</span>
   <span class="item-DD"><%= @article.host %></span>
   <span class="item-DT"> on: </span><span class="item-DD"><%= @article.updated_at.time.to_date %></span><br>
   <span class="item-DT">Tags: </span>
-  <span class="item-DD"><%= link_to @article.tags, articles_path(search: @article.tags) %></span>
-  &emsp;
+  <span class="item-DD"><%= link_to @article.tags, articles_path(search: @article.tags), class: "tags-link" %></span>
+  <br>
   <span class="item-DT"> Access:</span>
-  <span class="item-DD"><%= @articles_user.access %></span>
-  &emsp;
+  <span class="item-DD-small"><%= @articles_user.access %></span>
+  <br>
 
   <% if !@articles_user.user_rating.nil? %>
     <span class="item-DT"> Rating:</span>
-    <span class="item-DD"><%= @ratings_collection.assoc(@articles_user.user_rating)[1] %></span>
+    <span class="item-DD-small"><%= @ratings_collection.assoc(@articles_user.user_rating)[1] %></span>
   <% end %>
-  &emsp;
+  <br>
   <span class="item-DT"> Status:</span>
-  <span class="item-DD"><%= @articles_user.status %></span>
+  <span class="item-DD-small"><%= @articles_user.status %></span>
   <p></p>
-  <%= link_to "Edit", edit_article_path(@article), class: "edit-delete-links" %>
-  &emsp;|&emsp;
+  <%= link_to "Edit", edit_article_path(@article), class: "hollow button secondary small btn-action" %>
+  &emsp;
   <%= link_to 'Delete', article_path(@article),
               method: :delete,
-              data: { confirm: 'Are you sure?' }, class: "edit-delete-links" %>
+              data: { confirm: 'Are you sure?' }, class: "hollow button secondary small btn-action" %>
 
-  &emsp;|&emsp;
-  <%= link_to "Back to Article Bookmarks", articles_path, class: "edit-delete-links" %>
+  &emsp;
+  <%= link_to "Back to Article Bookmarks", articles_path, class: "hollow button secondary small btn-action" %>
 <% end %>
